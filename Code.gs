@@ -15,8 +15,11 @@ function SetCalendarReminders() {
 
   // Declare variables
   var calendar = CalendarApp.getDefaultCalendar();
-  var events = calendar.getEventsForDay(new Date());
-  var scriptCreationDate = new Date('April 28, 2021 8:00:00 -0500'); // Setting to 8am on the day I created this script, can be modified
+  var scriptCreationDate = new Date(); // today
+  var futureDate = new Date(scriptCreationDate.getTime() + (365 * 24 * 60 * 60 * 1000)); // one year
+
+  var events = calendar.getEvents(scriptCreationDate, futureDate);
+  
   var firstRun = ScriptProperties.getProperty("firstRun");
   var hour = 60;
 
@@ -24,21 +27,19 @@ function SetCalendarReminders() {
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
 
-    if ((event.getDateCreated() > scriptCreationDate) && event.isOwnedByMe()) {
+    // if ((event.getDateCreated() > scriptCreationDate) && event.isOwnedByMe()) {
       console.log("Event '" + event.getTitle() + "' created at " + event.getDateCreated());
       try {
-        console.log("Set popup reminder for an hour");
-        event.addPopupReminder(hour);
-        console.log("Set popup reminder for 4 hours");
-        event.addPopupReminder(hour * 4);
-        console.log("Set popup reminder for 12 hours");
-        event.addPopupReminder(hour * 12);
+        console.log("Set popup reminder for 3 weeks");
+        event.addPopupReminder(hour * 24 * 7 * 3);
+        console.log("Set popup reminder for 1 week");
+        event.addPopupReminder(hour * 24 * 7);
         console.log("Set popup reminder for a day");
         event.addPopupReminder(hour * 24);
       } catch (e) {
         console.log(e);
       }
-    }
+    // }
   }
 
   // Set trigger if this is our firstRun
